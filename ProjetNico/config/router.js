@@ -1,6 +1,6 @@
 import React from 'react';
 import {TabNavigator, StackNavigator} from 'react-navigation';
-import {Icon} from 'react-native-elements';
+//import {Icon} from 'react-native-elements';
 import Connexion from '../pages/connexion';
 import Inscription from '../pages/inscription';
 
