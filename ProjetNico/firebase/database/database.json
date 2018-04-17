@@ -1,0 +1,23 @@
+{
+    "communities" : {
+      "0" : {
+        "Name" : "Talence",
+        "Monnaie" : "TalenceCoin"
+      },
+      "1" : {
+        "Name" : "INP",
+        "Monnaie" : "INPCoin"
+      },
+      "2" : {
+        "Name" : "Arcachon",
+        "Monnaie" : "ArcaCoin"
+      }, 
+      "3" : {
+        "Name" : "Carbonariens",
+        "Monnaie" : "Carbo"
+      }
+    },
+    "users" : {
+  
+    }
+  }

@@ -5,14 +5,21 @@ import Inscription from './pages/inscription';
 import { StackNavigator } from 'react-navigation';
 import * as firebase from 'firebase';
 import {config} from './firebase/constants';
-firebase.initializeApp(config);
 import Main from './pages/main';
 
+const firebaseApp = firebase.initializeApp(config);
 
 export default class App extends React.Component {
+  constructor(props){
+    super(props)
+
+    console.disableYellowBox = true;
+  }
+
+
   render() {
     return (
-      <AppNavigator />
+      <Main />
     );
   }
 }
