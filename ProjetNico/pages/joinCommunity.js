@@ -15,12 +15,15 @@ export default class Join extends React.Component {
         let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
         this.state = {
+            name: '',
+            monnaie: '',
+            count: '',
             communitiesDataSource: ds
         }
         this.communitiesRef = this.getRef().child('communities');
 
         this.renderRow = this.renderRow.bind(this);
-        this.pressRow = this.pressRow.bind(this);
+        this.join = this.join.bind(this);
     }
 
     getRef() {
@@ -40,7 +43,9 @@ export default class Join extends React.Component {
             snap.forEach((child) => {
                 communities.push({
                     Name: child.val().Name,
-                    _key: child.key
+                    Monnaie: child.val().Monnaie,
+                    _key: child.key,
+                    Count: child.val().Count
                 })
             });
             this.setState({
@@ -50,21 +55,52 @@ export default class Join extends React.Component {
 
     }
 
-    pressRow(community) {
-        console.log(community);
+
+    join(community) {
+        const coKey = community._key
+        const user = firebase.auth().currentUser
+        const userId = user.uid
+        const email = user.title
+        const Name = community.Name
+        const Monnaie = community.Monnaie
+        const Count = community.Count
+        const newCount = Count+1
+        const ref = firebase.database().ref().child('users').child(userId).child('Communities')
+        ref.push({
+            Name: Name.toString(),
+            Monnaie: Monnaie.toString(),
+            Solde: 0,
+            Count : newCount
+        })
+
+        firebase.database().ref().child('communities').child(coKey).update(
+            {
+                Name: Name.toString(),
+                Monnaie: Monnaie.toString(),
+                Solde: 0,
+                Count : newCount
+            }
+        )
+
+        firebase.database().ref().child('communities').child(coKey).child('Membre/' + Count).set(
+            {
+                id : userId.toString(),
+                email : user.email.toString()
+            })
+
     }
 
     renderRow(community) {
         return (
-                <TouchableOpacity onPress={() => {
-                    this.pressRow(community)
-                }}>
-                    <View style={styles.buttonContainer}>
-                        <Text style={styles.buttonText}>
-                            {community.Name}
-                        </Text>
-                    </View>
-                </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+                this.join(community)
+            }}>
+                <View style={styles.buttonContainer}>
+                    <Text style={styles.buttonText}>
+                        {community.Name}
+                    </Text>
+                </View>
+            </TouchableOpacity>
         )
     }
 
@@ -93,7 +129,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgb(248, 194, 145)',
         paddingVertical: 15,
         marginBottom: 20,
-        width:200
+        width: 200
     },
     buttonText: {
         textAlign: 'center',

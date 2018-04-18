@@ -1,8 +1,9 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Image, TextInput } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { TabNavigator, TabBarBottom, StackNavigator } from 'react-navigation';
+import { TabNavigator, TabBarBottom, StackNavigator, NavigationActions } from 'react-navigation';
 import * as firebase from 'firebase';
+import Connexion from './inscription';
 
 
 export default class Profile extends React.Component {
@@ -10,6 +11,24 @@ export default class Profile extends React.Component {
         title: 'Profile',
     };
 
+    signOut = ()=>{
+        firebase.auth()
+        .signOut()
+        .then(() => {
+            this.props.navigation.navigate('Connexion');
+        })
+    }
+
+    resetNavigation() {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            key : null,
+            actions: [
+            NavigationActions.navigate('Connexion')
+            ]
+        })
+        this.props.navigation.dispatch(resetAction)
+    }
     render() {
         return (
             <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -53,7 +72,7 @@ export default class Profile extends React.Component {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        //onPress={() => this.props.navigation.navigate('Connexion')}
+                        onPress = {this.signOut.bind(this)}
                         style={styles.buttonContainer2}>
                         <Text style={styles.buttonText}>Déconnexion</Text>
                     </TouchableOpacity>

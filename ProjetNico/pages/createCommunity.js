@@ -6,74 +6,92 @@ import * as firebase from 'firebase';
 
 
 export default class Create extends React.Component {
-    static navigationOptions = {
-        title: 'Create',
-    };
-    constructor(props) {
-        super(props)
-        let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-        this.state = ({
-          name: '',
-          monnaie: '',
-          communitiesDataSource: ds
+  static navigationOptions = {
+    title: 'Create',
+  };
+  constructor(props) {
+    super(props)
+    let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+    this.state = ({
+      name: '',
+      monnaie: '',
+      communitiesDataSource: ds
+    })
+    this.communitiesRef = this.getRef().child('communities');
+
+    this.renderRow = this.renderRow.bind(this);
+    this.pressRow = this.pressRow.bind(this);
+  }
+
+  getRef() {
+    return firebase.database().ref();
+  }
+
+  componentWillMount() {
+    this.getCommunities(this.communitiesRef);
+  }
+  componentDidMount() {
+    this.getCommunities(this.communitiesRef);
+  }
+  getCommunities(communitiesRef) {
+
+    communitiesRef.on('value', (snap) => {
+      let communities = [];
+      snap.forEach((child) => {
+        communities.push({
+          Name: child.val().Name,
+          _key: child.key
         })
-        this.communitiesRef = this.getRef().child('communities');
+      });
+      this.setState({
+        communitiesDataSource: this.state.communitiesDataSource.cloneWithRows(communities)
+      });
+    })
 
-        this.renderRow = this.renderRow.bind(this);
-        this.pressRow = this.pressRow.bind(this);
+  }
+
+  pressRow(community) {
+    console.log(community);
+  }
+
+  renderRow(community) {
+    return (
+      <TouchableOpacity onPress={() => {
+        this.pressRow(community)
+      }}>
+        <View style={styles.buttonContainer}>
+          <Text style={styles.buttonText}>
+            {community.Name}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+  addCommunity() {
+    const user = firebase.auth().currentUser
+    const userId = user.uid
+    const name = this.state.name
+    const monnaie = this.state.monnaie
+    const ref = firebase.database().ref().child('users').child(userId).child('Communities')
+    ref.push({
+        Name :name.toString(),
+        Monnaie : monnaie.toString(),
+        Solde:0
+    })
+    this.communitiesRef.push({
+      Name: name.toString(),
+      Monnaie: monnaie.toString(),
+      Creator: userId.toString(),
+      Membre: {
+        id: userId.toString()
       }
+    })
 
-    getRef() {
-        return firebase.database().ref();
-    }
+  }
 
-    componentWillMount() {
-        this.getCommunities(this.communitiesRef);
-    }
-    componentDidMount() {
-        this.getCommunities(this.communitiesRef);
-    }
-    getCommunities(communitiesRef) {
-
-        communitiesRef.on('value', (snap) => {
-            let communities = [];
-            snap.forEach((child) => {
-                communities.push({
-                    Name: child.val().Name,
-                    _key: child.key
-                })
-            });
-            this.setState({
-                communitiesDataSource: this.state.communitiesDataSource.cloneWithRows(communities)
-            });
-        })
-
-    }
-
-    pressRow(community) {
-        console.log(community);
-    }
-
-    renderRow(community) {
-        return (
-                <TouchableOpacity onPress={() => {
-                    this.pressRow(community)
-                }}>
-                    <View style={styles.buttonContainer}>
-                        <Text style={styles.buttonText}>
-                            {community.Name}
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-        )
-    }
-      addCommunity(){
-        this.communitiesRef.push({Name:this.state.name,Monnaie:this.state.monnaie})
-      }
-
-    render() {
-        return (
-            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+  render() {
+    return (
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <View style={styles.logoContainer}>
           <Text style={styles.title}>Crée ta communauté</Text>
         </View>

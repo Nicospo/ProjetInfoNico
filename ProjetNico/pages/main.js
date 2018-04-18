@@ -61,31 +61,3 @@ export default class Main extends React.Component {
         );
     }
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#3498db',
-    },
-    logoContainer: {
-        alignItems: 'center',
-        flexGrow: 1,
-        justifyContent: 'center'
-    },
-    logo: {
-        width: 100,
-        height: 100
-    },
-    title: {
-        color: '#fff',
-        textAlign: 'center',
-        marginBottom: 30,
-        fontSize: 36,
-        fontWeight: 'bold'
-    },
-    container2: {
-        padding: 20,
-        marginBottom: 60
-    }
-});

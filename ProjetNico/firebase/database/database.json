@@ -2,19 +2,23 @@
     "communities" : {
       "0" : {
         "Name" : "Talence",
-        "Monnaie" : "TalenceCoin"
+        "Monnaie" : "TalenceCoin",
+        "Count" :0
       },
       "1" : {
         "Name" : "INP",
-        "Monnaie" : "INPCoin"
+        "Monnaie" : "INPCoin",
+        "Count" :0
       },
       "2" : {
         "Name" : "Arcachon",
-        "Monnaie" : "ArcaCoin"
+        "Monnaie" : "ArcaCoin",
+        "Count" :0
       }, 
       "3" : {
         "Name" : "Carbonariens",
-        "Monnaie" : "Carbo"
+        "Monnaie" : "Carbo",
+        "Count" :0
       }
     },
     "users" : {
