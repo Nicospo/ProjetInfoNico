@@ -69,6 +69,8 @@ export default class Create extends React.Component {
       </TouchableOpacity>
     )
   }
+
+  
   addCommunity() {
     const user = firebase.auth().currentUser
     const userId = user.uid

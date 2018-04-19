@@ -22,13 +22,12 @@ export default class Needed extends React.Component {
             somme: '',
             description: '',
             serviceNeededDataSource: ds,
-            solde:'',
+            solde: 0,
             modalVisible: false,
         }
 
         // this.neededServicesref = this.state.coRef.child('Services').child('Demandes');
         this.neededServicesref = this.getRef().child('communities').child(this.state.coRef).child('Services').child('Demandes')
-        
         this.renderRow = this.renderRow.bind(this);
         this.do = this.do.bind(this);
     }
@@ -61,7 +60,6 @@ export default class Needed extends React.Component {
         })
 
     }
-
     showService(neededService) {
         this.setState({
             intitule: neededService.Intitule.toString(),
@@ -79,49 +77,54 @@ export default class Needed extends React.Component {
         const servKey = neededService._key
         const user = firebase.auth().currentUser
         const userId = user.uid
-        const somme = neededService.Somme.toString()
+        const somme = neededService.Somme
         const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Demandes').child(servKey)
         ref.remove()
+        const userSoldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).child('Solde')
 
-        const soldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef)
-        const userSoldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef)
-        //this.renderSolde()
+        userSoldeRef.once("value").then(snapshot => { 
 
-        /* this.state.solde = this.getRef().child('users').child(this.state.coRef).val().('Solde */
-        const newSolde = (this.state.solde+somme).toString()
-        firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
-            Solde :  newSolde
-        })
-    }
-    renderSolde =()=>{
-        const user = firebase.auth().currentUser
-        const userId = user.uid
-        const soldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef)
-
-        soldeRef.on('child_added', function(snapshot){
-            let childSolde = snapshot.val().Solde
-
-            this.setState({
-                solde : childSolde
+             this.setState({
+                solde : snapshot.val()
+            }),
+            firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
+                Solde: this.state.solde+somme
             })
         })
+
     }
-/*     getSolde(userSoldeRef) {
-
-        userSoldeRef.on('value', (snap) => {
-            let soldes;
+/*     renderSolde = () => {
+        const user = firebase.auth().currentUser
+        const userId = user.uid
+        const soldeRef = firebase.database().ref().child('users').child(userId).child('Communities')
+        const ref = this.state.coRef
+        var that = this
+        soldeRef.on('value', (snap) => {
             snap.forEach((child) => {
-                soldes=child.val().Solde     
-                })
-            ;
-            this.setState(
-            {
-                solde : soldes.toString()
-            }
-        )
+                if('0' == ref){
+                that.setState={
+                     solde : child.val().Solde
+                }
+                }
+            });
         })
-
     } */
+    /*     getSolde(userSoldeRef) {
+    
+            userSoldeRef.on('value', (snap) => {
+                let soldes;
+                snap.forEach((child) => {
+                    soldes=child.val().Solde     
+                    })
+                ;
+                this.setState(
+                {
+                    solde : soldes.toString()
+                }
+            )
+            })
+    
+        } */
     renderRow(neededService) {
         return (
             <View>

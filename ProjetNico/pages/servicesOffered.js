@@ -21,14 +21,14 @@ export default class Offered extends React.Component {
             intitule: '',
             somme: '',
             description: '',
-            serviceNeededDataSource: ds,
-            solde:'',
+            serviceOfferedDataSource: ds,
+            solde: '',
             modalVisible: false,
         }
 
         // this.neededServicesref = this.state.coRef.child('Services').child('Demandes');
-        this.neededServicesref = this.getRef().child('communities').child(this.state.coRef).child('Services').child('Propositions')
-        
+        this.offeredServicesref = this.getRef().child('communities').child(this.state.coRef).child('Services').child('Propositions')
+
         this.renderRow = this.renderRow.bind(this);
         this.do = this.do.bind(this);
     }
@@ -38,14 +38,14 @@ export default class Offered extends React.Component {
     }
 
     componentWillMount() {
-        this.getNeededServices(this.neededServicesref);
+        this.getOfferedServices(this.offeredServicesref);
     }
     componentDidMount() {
-        this.getNeededServices(this.neededServicesref);
+        this.getOfferedServices(this.offeredServicesref);
     }
-    getNeededServices(neededServicesref) {
+    getOfferedServices(offeredServicesref) {
 
-        neededServicesref.on('value', (snap) => {
+        offeredServicesref.on('value', (snap) => {
             let services = [];
             snap.forEach((child) => {
                 services.push({
@@ -56,17 +56,17 @@ export default class Offered extends React.Component {
                 })
             });
             this.setState({
-                serviceNeededDataSource: this.state.serviceNeededDataSource.cloneWithRows(services)
+                serviceOfferedDataSource: this.state.serviceOfferedDataSource.cloneWithRows(services)
             });
         })
 
     }
 
-    showService(neededService) {
+    showService(offeredService) {
         this.setState({
-            intitule: neededService.Intitule.toString(),
-            somme: neededService.Somme.toString(),
-            description: neededService.Description.toString()
+            intitule: offeredService.Intitule.toString(),
+            somme: offeredService.Somme.toString(),
+            description: offeredService.Description.toString()
         })
         this.setModalVisible(true)
     }
@@ -75,68 +75,48 @@ export default class Offered extends React.Component {
         this.setState({ modalVisible: visible })
     }
 
-    do(neededService) {
-        const servKey = neededService._key
+    do(offeredService) {
+        const servKey = offeredService._key
         const user = firebase.auth().currentUser
         const userId = user.uid
-        const somme = neededService.Somme.toString()
+        const somme = offeredService.Somme
         const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Propositions').child(servKey)
-        ref.remove()
+        
+        const userSoldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).child('Solde')
 
-        const soldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef)
-        const userSoldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef)
-        //this.renderSolde()
-
-        /* this.state.solde = this.getRef().child('users').child(this.state.coRef).val().('Solde */
-        const newSolde = (this.state.solde+somme).toString()
-        firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
-            Solde :  newSolde
-        })
-    }
-    renderSolde =()=>{
-        const user = firebase.auth().currentUser
-        const userId = user.uid
-        const soldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef)
-
-        soldeRef.on('child_added', function(snapshot){
-            let childSolde = snapshot.val().Solde
+        userSoldeRef.once("value").then(snapshot => {
 
             this.setState({
-                solde : childSolde
+                solde: snapshot.val()
             })
-        })
-    }
-/*     getSolde(userSoldeRef) {
 
-        userSoldeRef.on('value', (snap) => {
-            let soldes;
-            snap.forEach((child) => {
-                soldes=child.val().Solde     
+            if (this.state.solde >= somme) {
+                firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
+                    Solde: this.state.solde - somme
                 })
-            ;
-            this.setState(
-            {
-                solde : soldes.toString()
+                ref.remove()
             }
-        )
+            else{
+                alert("Votre solde est insuffisant pour régler ce service.")
+            }
         })
 
-    } */
-    renderRow(neededService) {
+    }
+    renderRow(offeredService) {
         return (
             <View>
                 <View style={styles.containerButtons}>
                     <TouchableOpacity onPress={() => {
-                        this.showService(neededService)
+                        this.showService(offeredService)
                     }}>
                         <View style={styles.button1}>
                             <Text style={styles.buttonText}>
-                                {neededService.Intitule}
+                                {offeredService.Intitule}
                             </Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
-                        this.do(neededService)
+                        this.do(offeredService)
                     }}>
                         <View style={styles.button2}>
                             <Text style={styles.buttonText}> Moi ! </Text>
@@ -159,7 +139,7 @@ export default class Offered extends React.Component {
 
                 <Toolbar title="ItemLister" />
                 <ListView
-                    dataSource={this.state.serviceNeededDataSource}
+                    dataSource={this.state.serviceOfferedDataSource}
                     renderRow={this.renderRow}
 
                 />
