@@ -12,3 +12,10 @@ export const config = {
     storageBucket: FIREBASE_STORAGE_BUCKET,
     messagingSenderId: FIREBASE_MESSAGING_SENDER_ID
 }
+
+
+
+
+
+
+

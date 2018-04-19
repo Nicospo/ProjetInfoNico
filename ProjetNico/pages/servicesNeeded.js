@@ -111,9 +111,6 @@ export default class Needed extends React.Component {
         })
     }
 
-    createneededService() {
-        this.props.navigation.navigate
-    }
 
     renderRow(neededService) {
         return (

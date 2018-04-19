@@ -4,10 +4,11 @@ import Connexion from './pages/connexion';
 import Inscription from './pages/inscription';
 import { StackNavigator } from 'react-navigation';
 import * as firebase from 'firebase';
-import { config } from './firebase/constants';
 import Main from './pages/main';
 import { Tabs } from './config/router';
 
+
+import { config } from './firebase/constants';
 const firebaseApp = firebase.initializeApp(config);
 
 export default class App extends React.Component {

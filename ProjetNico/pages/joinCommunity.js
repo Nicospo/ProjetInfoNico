@@ -99,6 +99,7 @@ export default class Join extends React.Component {
                         id: userId.toString(),
                         email: user.email.toString()
                     })
+                    alert('Bravo !')
             }
         })
     }
