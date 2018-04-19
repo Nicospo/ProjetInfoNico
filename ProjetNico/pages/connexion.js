@@ -30,7 +30,7 @@ export default class Connexion extends React.Component {
     //identification
     firebase.auth()
     .signInWithEmailAndPassword(email, password)
-    .then(() => {this.props.navigation.navigate('Connexion') })
+    .then(() => {this.props.navigation.navigate('Main') })
     
      //Affiche le type d'erreur 
     .catch((error) => {

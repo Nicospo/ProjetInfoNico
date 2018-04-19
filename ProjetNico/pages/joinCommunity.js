@@ -70,31 +70,37 @@ export default class Join extends React.Component {
         const Count = community.Count
         const Description = community.Description
         const newCount = Count + 1
-
-        const ref = firebase.database().ref().child('users').child(userId).child('Communities').child(coKey)
-        ref.set({
-            Name: Name.toString(),
-            Monnaie: Monnaie.toString(),
-            Solde: 0,
-            Count: newCount.toString(),
-            Description:Description.toString()
-        })
-
-        firebase.database().ref().child('communities').child(coKey).update(
-            {
-                Name: Name.toString(),
-                Monnaie: Monnaie.toString(),
-                Count: newCount,
-                Description: Description.toString()
+        firebase.database().ref().child('users').child(userId).child('Communities').once('value', function (snapshot) {
+            if (snapshot.hasChild(coKey)) {
+                alert('Vous faites déjà partie de cette communauté !');
             }
-        )
 
-        firebase.database().ref().child('communities').child(coKey).child('Membre/' + Count).set(
-            {
-                id: userId.toString(),
-                email: user.email.toString()
-            })
+            else {
+                const ref = firebase.database().ref().child('users').child(userId).child('Communities').child(coKey)
+                ref.set({
+                    Name: Name.toString(),
+                    Monnaie: Monnaie.toString(),
+                    Solde: 0,
+                    Count: newCount.toString(),
+                    Description: Description.toString()
+                })
 
+                firebase.database().ref().child('communities').child(coKey).update(
+                    {
+                        Name: Name.toString(),
+                        Monnaie: Monnaie.toString(),
+                        Count: newCount,
+                        Description: Description.toString()
+                    }
+                )
+
+                firebase.database().ref().child('communities').child(coKey).child('Membre/' + Count).set(
+                    {
+                        id: userId.toString(),
+                        email: user.email.toString()
+                    })
+            }
+        })
     }
 
     showCommunity(community) {
@@ -191,7 +197,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffbe76',
         justifyContent: 'center',
         alignItems: 'center',
-        padding:20
+        padding: 20
     },
     buttonContainer: {
         backgroundColor: '#95afc0',
@@ -213,7 +219,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
         fontSize: 20,
         fontWeight: 'bold',
-        textDecorationLine:'underline'
+        textDecorationLine: 'underline'
     },
     basicText: {
         color: '#fff',
