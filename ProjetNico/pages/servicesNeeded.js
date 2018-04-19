@@ -81,50 +81,28 @@ export default class Needed extends React.Component {
         const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Demandes').child(servKey)
         ref.remove()
         const userSoldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).child('Solde')
+        const creatorServiceRef = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Demandes').child(servKey).child('Creator')
 
-        userSoldeRef.once("value").then(snapshot => { 
+        creatorServiceRef.once("value").then(snapshot => {
+            if (userId == snapshot.val()) { alert('Vous ne pouvez effectuer ce service, vous en êtes le créateur') }
+            else {
+                userSoldeRef.once("value").then(snapshot => {
 
-             this.setState({
-                solde : snapshot.val()
-            }),
-            firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
-                Solde: this.state.solde+somme
-            })
+                    this.setState({
+                        solde: snapshot.val()
+                    }),
+                        firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
+                            Solde: this.state.solde + somme
+                        })
+                })
+            }
         })
-
     }
-/*     renderSolde = () => {
-        const user = firebase.auth().currentUser
-        const userId = user.uid
-        const soldeRef = firebase.database().ref().child('users').child(userId).child('Communities')
-        const ref = this.state.coRef
-        var that = this
-        soldeRef.on('value', (snap) => {
-            snap.forEach((child) => {
-                if('0' == ref){
-                that.setState={
-                     solde : child.val().Solde
-                }
-                }
-            });
-        })
-    } */
-    /*     getSolde(userSoldeRef) {
-    
-            userSoldeRef.on('value', (snap) => {
-                let soldes;
-                snap.forEach((child) => {
-                    soldes=child.val().Solde     
-                    })
-                ;
-                this.setState(
-                {
-                    solde : soldes.toString()
-                }
-            )
-            })
-    
-        } */
+
+    createneededService() {
+        this.props.navigation.navigate
+    }
+
     renderRow(neededService) {
         return (
             <View>
@@ -161,6 +139,14 @@ export default class Needed extends React.Component {
             <View style={styles.container}>
 
                 <Toolbar title="ItemLister" />
+                <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.navigate('createNeeded', this.state.coRef)
+                    }}
+                    style={styles.buttonContainer}
+                >
+                    <Text style={styles.buttonText}> Crée ta demande ! </Text>
+                </TouchableOpacity>
                 <ListView
                     dataSource={this.state.serviceNeededDataSource}
                     renderRow={this.renderRow}

@@ -12,12 +12,12 @@ import Tabs from '../config/router';
 
 
 //const ProfileNavigator = StackNavigator({
- //   ProfileLogIn:{
-  //      screen:Profile
-  //  },
-   // ProfileLogOut:{
-   //     screen: App
-   // }
+//   ProfileLogIn:{
+//      screen:Profile
+//  },
+// ProfileLogOut:{
+//     screen: App
+// }
 //})
 /* const Tabs = TabNavigator({
     Profile: {
@@ -65,7 +65,7 @@ export default class Main extends React.Component {
         header: null
     }
 
-    constructor(props){
+    constructor(props) {
         super(props)
     }
     render() {

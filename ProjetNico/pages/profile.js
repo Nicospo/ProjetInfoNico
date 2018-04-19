@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Image, TextInput } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Image, TextInput, TouchableHighlight } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TabNavigator, TabBarBottom, StackNavigator, NavigationActions } from 'react-navigation';
 import * as firebase from 'firebase';
@@ -9,61 +9,46 @@ import Connexion from './connexion';
 export default class Profile extends React.Component {
     static navigationOptions = {
         title: 'Profile',
-        header:null
-    };
+        header: null,
 
-    signOut = ()=>{
+
+    };
+    constructor(props) {
+        super(props)
+
+
+        state: {
+            email: ''
+        }
+    }
+
+    signOut = () => {
         firebase.auth()
-        .signOut()
-        .then(() => {
-           this.props.navigation.navigate('Connexion')
-        })
-    
+            .signOut()
+            .then(() => {
+                this.props.navigation.navigate('Connexion')
+            })
+
     }
     render() {
+        const user = firebase.auth().currentUser
+        const email = user.email
+
         return (
+
             <KeyboardAvoidingView behavior="padding" style={styles.container}>
                 <View style={styles.logoContainer}>
                     <Text style={styles.title}>Profil</Text>
                 </View>
                 <View style={styles.container2}>
 
-                    <TextInput
-                        placeholder="Adresse e-mail"
-                        placeholderTextColor="rgba(255,255,255,0.7)"
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        style={styles.input}
-                    //onChangeText={(email) => this.setState({ email })}
-                    />
-                    <TextInput
-                        placeholder="Mot de passe"
-                        placeholderTextColor="rgba(255,255,255,0.7)"
-                        secureTextEntry
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        style={styles.input}
-                    //    onChangeText={(password) => this.setState({ password })}
-                    />
-                    <TextInput
-                        placeholder="Confirmer le mot de passe"
-                        placeholderTextColor="rgba(255,255,255,0.7)"
-                        secureTextEntry
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        style={styles.input}
-                    //   onChangeText={(text) => this.setState({ confirmPassword: text })}
-                    />
+                    <TouchableHighlight
+                        style={styles.input}>
+                        <Text style={styles.buttonText}>{email}</Text>
+                    </TouchableHighlight>
 
                     <TouchableOpacity
-                        //onPress={() => this.signUpUser(this.state.email, this.state.password, this.state.confirmPassword)}
-                        style={styles.buttonContainer}>
-                        <Text style={styles.buttonText}>Mettre à jour !</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        onPress = {this.signOut.bind(this)}
+                        onPress={this.signOut.bind(this)}
                         style={styles.buttonContainer2}>
                         <Text style={styles.buttonText}>Déconnexion</Text>
                     </TouchableOpacity>
@@ -85,11 +70,9 @@ const styles = StyleSheet.create({
         marginBottom: 60
     },
     input: {
-        height: 40,
         backgroundColor: 'rgba(255,255,255,0.2)',
-        marginTop: 20,
-        color: '#fff',
-        paddingHorizontal: 10
+        paddingVertical: 15,
+        marginTop: 40
     },
     buttonContainer: {
         backgroundColor: 'rgb(52, 73, 94)',
@@ -110,14 +93,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexGrow: 1,
         justifyContent: 'center'
-      },
-      title: {
+    },
+    title: {
         color: '#fff',
         textAlign: 'center',
         marginBottom: 20,
-        marginTop:30,
+        marginTop: 30,
         fontSize: 36,
         fontWeight: 'bold'
-      },
+    },
 
 });

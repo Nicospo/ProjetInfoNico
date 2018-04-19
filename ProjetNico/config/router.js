@@ -11,6 +11,8 @@ import Main from '../pages/main';
 import {AppNavigator} from'../App';
 import Needed from'../pages/servicesNeeded';
 import Offered from '../pages/servicesOffered';
+import createNeeded from '../pages/createNeededService';
+import createOffered from'../pages/createOfferedService';
 
 export const CommunitiesNavigator = StackNavigator({
     Communities:{
@@ -21,6 +23,12 @@ export const CommunitiesNavigator = StackNavigator({
     },
     Offered:{
         screen:Offered
+    },
+    createNeeded:{
+        screen:createNeeded
+    },
+    createOffered:{
+        screen:createOffered
     }
     
 })

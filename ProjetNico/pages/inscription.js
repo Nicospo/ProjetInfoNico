@@ -31,36 +31,36 @@ export default class Connexion extends React.Component {
   }
 
   signUpUser = (email, password, confirmPassword) => {
-      if (!this.stringsAreEquals(this.state.password, this.state.confirmPassword)) {
-        alert("Les mots de passe ne sont pas identiques.")
-        return;
-      }
-      if (this.stringIsEmpty(password)) {
-        alert("Vous n'avez pas entré de mot de passe.")
-        return;
-      }
-      firebase.auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          this.setState({ error: '', loading: false });
-          this.props.navigation.navigate('Connexion')
-        })
-    
-    .catch ((error) => {
-      const errorCode = error.code;
-      if (errorCode == 'auth/invalid-email') {
-        alert("Saisie d'email invalide !")
+    if (!this.stringsAreEquals(this.state.password, this.state.confirmPassword)) {
+      alert("Les mots de passe ne sont pas identiques.")
+      return;
+    }
+    if (this.stringIsEmpty(password)) {
+      alert("Vous n'avez pas entré de mot de passe.")
+      return;
+    }
+    firebase.auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        this.setState({ error: '', loading: false });
+        this.props.navigation.navigate('Connexion')
+      })
 
-      }
-      else if (errorCode == 'auth/email-already-in-use') {
-        alert("Cet utilisateur existe déjà")
+      .catch((error) => {
+        const errorCode = error.code;
+        if (errorCode == 'auth/invalid-email') {
+          alert("Saisie d'email invalide !")
 
-      }
-      else if (errorCode == 'auth/weak-password') {
-        alert("La sécurité de votre mot de passe est trop faible. Veuillez avoir au moins 6 caractères")
+        }
+        else if (errorCode == 'auth/email-already-in-use') {
+          alert("Cet utilisateur existe déjà")
 
-      }
-    })
+        }
+        else if (errorCode == 'auth/weak-password') {
+          alert("La sécurité de votre mot de passe est trop faible. Veuillez avoir au moins 6 caractères")
+
+        }
+      })
   }
   render() {
     return (

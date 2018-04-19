@@ -81,26 +81,32 @@ export default class Offered extends React.Component {
         const userId = user.uid
         const somme = offeredService.Somme
         const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Propositions').child(servKey)
-        
+
         const userSoldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).child('Solde')
+        const creatorServiceRef = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Propositions').child(servKey).child('Creator')
+        creatorServiceRef.once("value").then(snapshot => {
+            if (userId == snapshot.val()) { alert('Vous ne pouvez effectuer ce service, vous en êtes le créateur') }
+            else {
 
-        userSoldeRef.once("value").then(snapshot => {
+                userSoldeRef.once("value").then(snapshot => {
 
-            this.setState({
-                solde: snapshot.val()
-            })
+                    this.setState({
+                        solde: snapshot.val()
+                    })
 
-            if (this.state.solde >= somme) {
-                firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
-                    Solde: this.state.solde - somme
+                    if (this.state.solde >= somme) {
+                        firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
+                            Solde: this.state.solde - somme
+                        })
+                        ref.remove()
+                    }
+                    else {
+                        alert("Votre solde est insuffisant pour régler ce service.")
+                    }
+
                 })
-                ref.remove()
-            }
-            else{
-                alert("Votre solde est insuffisant pour régler ce service.")
             }
         })
-
     }
     renderRow(offeredService) {
         return (
@@ -138,6 +144,14 @@ export default class Offered extends React.Component {
             <View style={styles.container}>
 
                 <Toolbar title="ItemLister" />
+                <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.navigate('createOffered', this.state.coRef)
+                    }}
+                    style={styles.buttonContainer}
+                >
+                    <Text style={styles.buttonText}> Crée ta proposition ! </Text>
+                </TouchableOpacity>
                 <ListView
                     dataSource={this.state.serviceOfferedDataSource}
                     renderRow={this.renderRow}

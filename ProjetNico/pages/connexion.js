@@ -25,54 +25,54 @@ export default class Connexion extends React.Component {
   };
 
   loginUser = (email, password) => {
-      
+
 
     //identification
     firebase.auth()
-    .signInWithEmailAndPassword(email, password)
-    .then(() => {this.props.navigation.navigate('Main') })
-    
-     //Affiche le type d'erreur 
-    .catch((error) => {
+      .signInWithEmailAndPassword(email, password)
+      .then(() => { this.props.navigation.navigate('Main') })
+
+      //Affiche le type d'erreur 
+      .catch((error) => {
         const errorCode = error.code;
         if (errorCode == 'auth/invalid-email') {
-             alert("Saisie d'email invalide !")
-        } 
-        else if (errorCode == 'auth/user-not-found'){
-            alert("Cet utilisateur n'existe pas")
+          alert("Saisie d'email invalide !")
+        }
+        else if (errorCode == 'auth/user-not-found') {
+          alert("Cet utilisateur n'existe pas")
 
         }
-        else if(errorCode == 'auth/wrong-password'){
-            alert("Mot de passe incorrect")
+        else if (errorCode == 'auth/wrong-password') {
+          alert("Mot de passe incorrect")
         }
-        else{
-           alert("La connexion a échoué")
+        else {
+          alert("La connexion a échoué")
 
         }
-    });
+      });
   }
 
 
 
-/*       firebase.auth().signInWithEmailAndPassword(email,password)
-      .then(()=>{
-        this.props.navigation.navigate('Main') 
-    }
-    .catch((error)=>
-    {
-      const errorCode = error.code;
-      if (errorCode == 'auth/invalid-email') {
-         alert("Cet email ne correspond pas à celui d'un utilisateur")
-      } 
-      else if (errorCode == 'auth/user-not-found'){
-         alert( "Cet utilisateur n'existe pas")
+  /*       firebase.auth().signInWithEmailAndPassword(email,password)
+        .then(()=>{
+          this.props.navigation.navigate('Main') 
       }
-      else if(errorCode == 'auth/wrong-password'){
-          alert("Mot de passe incorrect")
-      }
-    })
-  )
-  } */
+      .catch((error)=>
+      {
+        const errorCode = error.code;
+        if (errorCode == 'auth/invalid-email') {
+           alert("Cet email ne correspond pas à celui d'un utilisateur")
+        } 
+        else if (errorCode == 'auth/user-not-found'){
+           alert( "Cet utilisateur n'existe pas")
+        }
+        else if(errorCode == 'auth/wrong-password'){
+            alert("Mot de passe incorrect")
+        }
+      })
+    )
+    } */
 
   render() {
     return (
@@ -92,7 +92,7 @@ export default class Connexion extends React.Component {
             autoCapitalize="none"
             autoCorrect={false}
             style={styles.input}
-            onChangeText={(email)=>this.setState({email})}
+            onChangeText={(email) => this.setState({ email })}
           />
           <TextInput
             placeholder="Mot de passe"
@@ -101,12 +101,12 @@ export default class Connexion extends React.Component {
             autoCapitalize="none"
             autoCorrect={false}
             style={styles.input}
-            onChangeText={(password)=>this.setState({password})}
+            onChangeText={(password) => this.setState({ password })}
           />
 
-          <TouchableOpacity 
-          onPress={() => this.loginUser(this.state.email, this.state.password)}
-          style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => this.loginUser(this.state.email, this.state.password)}
+            style={styles.buttonContainer}>
             <Text style={styles.buttonText}>Connexion</Text>
           </TouchableOpacity>
 

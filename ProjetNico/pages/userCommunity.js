@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 export default class UserCommunity extends React.Component {
     static navigationOptions = {
         title: 'UserCommunity',
-        header:null
+        header: null
     };
 
     constructor() {
@@ -16,21 +16,21 @@ export default class UserCommunity extends React.Component {
         let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
         this.state = {
-            ref:'',
+            ref: '',
             name: '',
             monnaie: '',
             count: '',
-            description:'',
-            solde:'',
-            modalVisible:false,
+            description: '',
+            solde: '',
+            modalVisible: false,
             communitiesDataSource: ds
         }
         const user = firebase.auth().currentUser
         const userId = user.uid
-        this.usercommunitiesRef = this.getRef().child('users/'+userId+'/Communities');
+        this.usercommunitiesRef = this.getRef().child('users/' + userId + '/Communities');
 
         this.renderRow = this.renderRow.bind(this);
-       // this.join = this.join.bind(this);
+        // this.join = this.join.bind(this);
     }
 
     getRef() {
@@ -54,8 +54,8 @@ export default class UserCommunity extends React.Component {
                     Monnaie: child.val().Monnaie,
                     _key: child.key,
                     Count: child.val().Count,
-                    Description:child.val().Description,
-                    Solde:child.val().Solde
+                    Description: child.val().Description,
+                    Solde: child.val().Solde
                 })
             });
             this.setState({
@@ -64,7 +64,7 @@ export default class UserCommunity extends React.Component {
         })
 
     }
-    check(community){
+    check(community) {
         const coKey = community._key
         //const ref = firebase.database().ref().child('communities').child(coKey)
         this.setState({
@@ -74,7 +74,7 @@ export default class UserCommunity extends React.Component {
             description: community.Description.toString(),
             solde: community.Solde.toString(),
             //ref : ref.toString()
-            ref:coKey.toString()
+            ref: coKey.toString()
         })
         this.setModalVisible(true)
     }
@@ -86,16 +86,16 @@ export default class UserCommunity extends React.Component {
     renderRow(community) {
         return (
             <View style={styles.containerButtons}>
-            <TouchableOpacity onPress={() => {
-                this.check(community)
-            }}>
-                <View style={styles.button1}>
-                    <Text style={styles.buttonText}>
-                        {community.Name}
-                    </Text>
-                </View>
-            </TouchableOpacity>
-        </View>
+                <TouchableOpacity onPress={() => {
+                    this.check(community)
+                }}>
+                    <View style={styles.button1}>
+                        <Text style={styles.buttonText}>
+                            {community.Name}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
         )
     }
 
@@ -103,59 +103,59 @@ export default class UserCommunity extends React.Component {
         return (
             <View style={styles.container}>
 
-            <Toolbar title="ItemLister" />
-            <ListView
-                dataSource={this.state.communitiesDataSource}
-                renderRow={this.renderRow}
-            />
-            <Modal
-                animationType={'slide'}
-                transparent={false}
-                visible={this.state.modalVisible}
-                onRequestClose={() => { }}
-            >
-                <View style={styles.container2}>
-                    <Text style={styles.title}>{this.state.name}</Text>
-                    <View>
-                        <Text style={styles.label}>Monnaie: </Text>
-                        <Text style={styles.basicText}>{this.state.monnaie}</Text>
-                        <Text style={styles.label}>Votre solde: </Text>
-                        <Text style={styles.basicText}>{this.state.solde}</Text>
-                        <Text style={styles.label}>Description: </Text>
-                        <Text style={styles.basicText}>{this.state.description}</Text>
-                        <TouchableOpacity
-                            onPress = {() => {
-                                this.props.navigation.navigate('Needed',this.state.ref)
-                                this.setModalVisible(false)
-                            }}
-                            style={styles.buttonContainer2}
-                        >
-                            <Text style={styles.buttonText}> Services demandés </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.props.navigation.navigate('Offered',this.state.ref)
-                                this.setModalVisible(false)
-                            }}
-                            style={styles.buttonContainer2}
-                        >
-                            <Text style={styles.buttonText}> Services proposés </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.setModalVisible(false)
-                            }}
-                            style={styles.buttonContainer}
-                        >
-                            <Text style={styles.buttonText}> Retour </Text>
-                        </TouchableOpacity>
+                <Toolbar title="ItemLister" />
+                <ListView
+                    dataSource={this.state.communitiesDataSource}
+                    renderRow={this.renderRow}
+                />
+                <Modal
+                    animationType={'slide'}
+                    transparent={false}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => { }}
+                >
+                    <View style={styles.container2}>
+                        <Text style={styles.title}>{this.state.name}</Text>
+                        <View>
+                            <Text style={styles.label}>Monnaie: </Text>
+                            <Text style={styles.basicText}>{this.state.monnaie}</Text>
+                            <Text style={styles.label}>Votre solde: </Text>
+                            <Text style={styles.basicText}>{this.state.solde}</Text>
+                            <Text style={styles.label}>Description: </Text>
+                            <Text style={styles.basicText}>{this.state.description}</Text>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate('Needed', this.state.ref)
+                                    this.setModalVisible(false)
+                                }}
+                                style={styles.buttonContainer2}
+                            >
+                                <Text style={styles.buttonText}> Services demandés </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate('Offered', this.state.ref)
+                                    this.setModalVisible(false)
+                                }}
+                                style={styles.buttonContainer2}
+                            >
+                                <Text style={styles.buttonText}> Services proposés </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setModalVisible(false)
+                                }}
+                                style={styles.buttonContainer}
+                            >
+                                <Text style={styles.buttonText}> Retour </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
 
-        </View>
-    );
-}
+            </View>
+        );
+    }
 }
 
 
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#686de0',
         justifyContent: 'center',
         alignItems: 'center',
-        padding:20
+        padding: 20
     },
     buttonContainer: {
         backgroundColor: '#95afc0',
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         fontSize: 15,
         fontWeight: 'bold',
-        textDecorationLine:'underline'
+        textDecorationLine: 'underline'
     },
     basicText: {
         color: '#fff',

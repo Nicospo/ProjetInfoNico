@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 export default class Create extends React.Component {
   static navigationOptions = {
     title: 'Create',
-    header:null
+    header: null
   };
   constructor(props) {
     super(props)
@@ -16,7 +16,7 @@ export default class Create extends React.Component {
     this.state = ({
       name: '',
       monnaie: '',
-      description:'',
+      description: '',
       communitiesDataSource: ds
     })
     this.communitiesRef = this.getRef().child('communities');
@@ -70,7 +70,7 @@ export default class Create extends React.Component {
     )
   }
 
-  
+
   addCommunity() {
     const user = firebase.auth().currentUser
     const userId = user.uid
@@ -78,17 +78,17 @@ export default class Create extends React.Component {
     const monnaie = this.state.monnaie
     const description = this.state.description
     const ref = firebase.database().ref().child('users').child(userId).child('Communities').push()
-    const refKey=ref.key
+    const refKey = ref.key
 
     ref.set({
-        Name :name.toString(),
-        Monnaie : monnaie.toString(),
-        Solde:0,
-        Description: description.toString(),
-        Count:1
+      Name: name.toString(),
+      Monnaie: monnaie.toString(),
+      Solde: 0,
+      Description: description.toString(),
+      Count: 1
     }
-   )
-   
+    )
+
     this.communitiesRef.child(refKey).set({
       Name: name.toString(),
       Monnaie: monnaie.toString(),
@@ -96,7 +96,7 @@ export default class Create extends React.Component {
       Membre: {
         id: userId.toString()
       },
-      Count:1,
+      Count: 1,
       Description: description.toString()
     })
 
@@ -124,7 +124,7 @@ export default class Create extends React.Component {
             style={styles.input}
             onChangeText={(monnaie) => this.setState({ monnaie })}
           />
-           <TextInput
+          <TextInput
             placeholder="Description de la communauté"
             placeholderTextColor="rgba(255,255,255,0.7)"
             autoCorrect={false}
