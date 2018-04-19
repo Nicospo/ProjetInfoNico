@@ -1,14 +1,14 @@
 import * as firebase from 'firebase';
 
-export async function login (email, pass) {
+export async function login(email, pass) {
     try {
         await firebase.auth()
             .signInWithEmailAndPassword(email, pass);
-            firebase.auth();
+        firebase.auth();
 
     } catch (error) {
         console.log(error.toString())
-    }    
+    }
 }
 
 export async function signUp(email, pass) {
@@ -21,12 +21,12 @@ export async function signUp(email, pass) {
     }
 }
 
-const promiseLogin = (email,pass) => {
+const promiseLogin = (email, pass) => {
     new Promise((resolve, reject) => {
-        this.login(email,pass)
+        this.login(email, pass)
         resolve('Login succeed')
         reject('ERROR !')
     });
 }
 
-export {promiseLogin} ; 
+export { promiseLogin }; 

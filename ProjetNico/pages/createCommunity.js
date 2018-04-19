@@ -79,27 +79,44 @@ export default class Create extends React.Component {
     const description = this.state.description
     const ref = firebase.database().ref().child('users').child(userId).child('Communities').push()
     const refKey = ref.key
+    if (name != '') {
+      if (monnaie != '') {
+        if (description != '') {
 
-    ref.set({
-      Name: name.toString(),
-      Monnaie: monnaie.toString(),
-      Solde: 0,
-      Description: description.toString(),
-      Count: 1
+
+          ref.set({
+            Name: name.toString(),
+            Monnaie: monnaie.toString(),
+            Solde: 0,
+            Description: description.toString(),
+            Count: 1
+          }
+          )
+
+          this.communitiesRef.child(refKey).set({
+            Name: name.toString(),
+            Monnaie: monnaie.toString(),
+            Creator: userId.toString(),
+            Membre: {
+              id: userId.toString()
+            },
+            Count: 1,
+            Description: description.toString()
+          })
+          alert('Votre communauté a bien été crée !')
+          this.props.navigation.navigate('Join')
+        }
+        else {
+          alert("La description n'a pas été rentrée.")
+        }
+      }
+      else {
+        alert("La monnaie n'a pas été rentrée.")
+      }
     }
-    )
-
-    this.communitiesRef.child(refKey).set({
-      Name: name.toString(),
-      Monnaie: monnaie.toString(),
-      Creator: userId.toString(),
-      Membre: {
-        id: userId.toString()
-      },
-      Count: 1,
-      Description: description.toString()
-    })
-
+    else {
+      alert("Le nom n'a pas été rentré.")
+    }
   }
 
   render() {

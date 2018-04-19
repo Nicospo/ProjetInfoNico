@@ -7,30 +7,29 @@ import Profile from '../pages/profile';
 import Join from '../pages/joinCommunity';
 import Creation from '../pages/createCommunity';
 import Communities from '../pages/userCommunity';
-import Main from '../pages/main';
-import {AppNavigator} from'../App';
-import Needed from'../pages/servicesNeeded';
+import { AppNavigator } from '../App';
+import Needed from '../pages/servicesNeeded';
 import Offered from '../pages/servicesOffered';
 import createNeeded from '../pages/createNeededService';
-import createOffered from'../pages/createOfferedService';
+import createOffered from '../pages/createOfferedService';
 
 export const CommunitiesNavigator = StackNavigator({
-    Communities:{
-        screen:Communities
+    Communities: {
+        screen: Communities
     },
-    Needed:{
-        screen:Needed
+    Needed: {
+        screen: Needed
     },
-    Offered:{
-        screen:Offered
+    Offered: {
+        screen: Offered
     },
-    createNeeded:{
-        screen:createNeeded
+    createNeeded: {
+        screen: createNeeded
     },
-    createOffered:{
-        screen:createOffered
+    createOffered: {
+        screen: createOffered
     }
-    
+
 })
 export const Tabs = TabNavigator({
     Profile: {
@@ -58,7 +57,7 @@ export const Tabs = TabNavigator({
 
         }
     },
-    Communities:{
+    Communities: {
         screen: CommunitiesNavigator,
         navigationOptions: {
             tabBarLabel: 'Vos Co-z',
@@ -69,6 +68,6 @@ export const Tabs = TabNavigator({
     {
         tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom',
-        header:null
+        header: null
     }
 )

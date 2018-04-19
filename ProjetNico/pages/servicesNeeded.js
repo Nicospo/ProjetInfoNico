@@ -24,6 +24,7 @@ export default class Needed extends React.Component {
             serviceNeededDataSource: ds,
             solde: 0,
             modalVisible: false,
+            soldeCreator:0,
         }
 
         // this.neededServicesref = this.state.coRef.child('Services').child('Demandes');
@@ -79,21 +80,32 @@ export default class Needed extends React.Component {
         const userId = user.uid
         const somme = neededService.Somme
         const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Demandes').child(servKey)
-        ref.remove()
+
         const userSoldeRef = firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).child('Solde')
         const creatorServiceRef = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Demandes').child(servKey).child('Creator')
 
         creatorServiceRef.once("value").then(snapshot => {
             if (userId == snapshot.val()) { alert('Vous ne pouvez effectuer ce service, vous en êtes le créateur') }
             else {
+                creatorId=snapshot.val()
+                ref.remove()
                 userSoldeRef.once("value").then(snapshot => {
-
                     this.setState({
                         solde: snapshot.val()
                     }),
                         firebase.database().ref().child('users').child(userId).child('Communities').child(this.state.coRef).update({
                             Solde: this.state.solde + somme
                         })
+                        
+                })
+                const creatorSoldeRef= firebase.database().ref().child('users').child(snapshot.val()).child('Communities').child(this.state.coRef).child('Solde')
+                creatorSoldeRef.once("value").then(snapshot=>{
+                    this.setState({
+                        soldeCreator : snapshot.val()
+                    })
+                    firebase.database().ref().child('users').child(creatorId).child('Communities').child(this.state.coRef).update({
+                        Solde : this.state.soldeCreator - somme
+                    })
                 })
             }
         })
@@ -152,6 +164,14 @@ export default class Needed extends React.Component {
                     renderRow={this.renderRow}
 
                 />
+                <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.navigate('Communities')
+                    }}
+                    style={styles.buttonContainer}
+                >
+                    <Text style={styles.buttonText}> Retour </Text>
+                </TouchableOpacity>
                 <Modal
                     animationType={'slide'}
                     transparent={false}
@@ -161,22 +181,21 @@ export default class Needed extends React.Component {
                     <View style={styles.container2}>
                         <Text style={styles.title}>{this.state.intitule}</Text>
 
-
                         <View>
                             <Text style={styles.label}>Description: </Text>
                             <Text style={styles.basicText}>{this.state.description}</Text>
                             <Text style={styles.label}>Somme: </Text>
                             <Text style={styles.basicText}>{this.state.somme}</Text>
 
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.setModalVisible(false)
-                                }}
-                                style={styles.buttonContainer}
-                            >
-                                <Text style={styles.buttonText}> Retour </Text>
-                            </TouchableOpacity>
                         </View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.setModalVisible(false)
+                            }}
+                            style={styles.buttonContainer}
+                        >
+                            <Text style={styles.buttonText}> Retour </Text>
+                        </TouchableOpacity>
                     </View>
                 </Modal>
 
@@ -188,7 +207,7 @@ export default class Needed extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#4834d4',
+        backgroundColor: '#079992',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -202,7 +221,9 @@ const styles = StyleSheet.create({
     buttonContainer: {
         backgroundColor: '#95afc0',
         paddingVertical: 15,
-        marginTop: 40
+        marginTop: 30,
+        marginBottom: 20,
+        width: 200
     },
     title: {
         color: '#fff',
@@ -235,7 +256,7 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     button1: {
-        backgroundColor: '#30336b',
+        backgroundColor: '#38ada9',
         paddingVertical: 15,
         marginBottom: 20,
         width: 150,

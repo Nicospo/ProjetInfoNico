@@ -5,9 +5,9 @@ import { TabNavigator, TabBarBottom, StackNavigator } from 'react-navigation';
 import Toolbar from '../components/Toolbar/toolbar2';
 import * as firebase from 'firebase';
 
-export default class UserCommunity extends React.Component {
+export default class Communities extends React.Component {
     static navigationOptions = {
-        title: 'UserCommunity',
+        title: 'Communities',
         header: null
     };
 
@@ -66,14 +66,12 @@ export default class UserCommunity extends React.Component {
     }
     check(community) {
         const coKey = community._key
-        //const ref = firebase.database().ref().child('communities').child(coKey)
         this.setState({
             name: community.Name.toString(),
             monnaie: community.Monnaie.toString(),
             count: community.Count.toString(),
             description: community.Description.toString(),
             solde: community.Solde.toString(),
-            //ref : ref.toString()
             ref: coKey.toString()
         })
         this.setModalVisible(true)
@@ -172,7 +170,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#686de0',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20
+        padding: 20,
     },
     buttonContainer: {
         backgroundColor: '#95afc0',
@@ -182,7 +180,7 @@ const styles = StyleSheet.create({
     buttonContainer2: {
         backgroundColor: '#30336b',
         paddingVertical: 15,
-        marginTop: 30
+        marginTop: 20
     },
     title: {
         color: '#fff',

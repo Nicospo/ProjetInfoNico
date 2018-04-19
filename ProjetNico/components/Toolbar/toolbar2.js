@@ -8,34 +8,34 @@ export default class ToolBar extends React.Component {
 
     render() {
         return (
-                <View style={styles.navbar} >
-                    <Text style={styles.navbarTitle}>Mes Communautés</Text>
-                </View>
+            <View style={styles.navbar} >
+                <Text style={styles.navbarTitle}>Mes Communautés</Text>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     navbar: {
-        alignItems:'center',
-        backgroundColor:'rgb(7, 153, 146)',
-        borderBottomColor:'transparent',
+        alignItems: 'center',
+        backgroundColor: 'rgb(7, 153, 146)',
+        borderBottomColor: 'transparent',
         borderColor: 'transparent',
-        borderWidth:1,
-        justifyContent:'center',
-        height:70,
-        flexDirection:'row',
-        marginTop : 70
+        borderWidth: 1,
+        justifyContent: 'center',
+        height: 70,
+        flexDirection: 'row',
+        marginTop: 70
     },
-    navbarTitle:{
+    navbarTitle: {
         color: '#fff',
         textAlign: 'center',
         marginBottom: 30,
         fontSize: 36,
         fontWeight: 'bold'
     },
-    toolbar :{
-        backgroundColor:'#fff',
-        height:22
+    toolbar: {
+        backgroundColor: '#fff',
+        height: 22
     }
 });

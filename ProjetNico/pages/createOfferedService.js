@@ -16,7 +16,7 @@ export default class createOffered extends React.Component {
         this.state = ({
             coRef: this.props.navigation.state.params,
             intitule: '',
-            somme: '',
+            somme: null,
             description: '',
             solde: 0,
             offeredDataSource: ds
@@ -40,16 +40,18 @@ export default class createOffered extends React.Component {
 
         if (intitule != '') {
             if (description != '') {
-                if (isNaN(somme)) {
+                if ((isNaN(somme)) || (somme == null)) {
                     alert("La somme rentrée n'est pas un numéro")
                 }
                 else {
                     const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Propositions').push({
                         Intitule: intitule.toString(),
-                        Somme: somme,
+                        Somme: parseInt(somme),
                         Description: description.toString(),
                         Creator: user.uid.toString()
                     })
+                    alert('Votre demande a bien été créée !')
+                    this.props.navigation.navigate('Offered', this.state.coRef)
                 }
             }
             else {
@@ -79,7 +81,7 @@ export default class createOffered extends React.Component {
                         onChangeText={(intitule) => this.setState({ intitule })}
                     />
                     <TextInput
-                        placeholder="Somme à offrir"
+                        placeholder="Somme à demander"
                         placeholderTextColor="rgba(255,255,255,0.7)"
                         autoCorrect={false}
                         style={styles.input}
@@ -98,6 +100,14 @@ export default class createOffered extends React.Component {
                         style={styles.buttonContainer}>
                         <Text style={styles.buttonText}>Je la crée !</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.navigate('Offered', this.state.coRef)
+                        }}
+                        style={styles.buttonContainer2}
+                    >
+                        <Text style={styles.buttonText}> Retour </Text>
+                    </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
         );
@@ -107,7 +117,7 @@ export default class createOffered extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(246, 185, 59)',
+        backgroundColor: '#60a3bc',
     },
     logoContainer: {
         alignItems: 'center',
@@ -133,7 +143,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     buttonContainer: {
-        backgroundColor: 'rgb(250, 211, 144)',
+        backgroundColor: '#1e3799',
         paddingVertical: 15,
         marginBottom: 20
     },
@@ -141,5 +151,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#ffffff',
         fontWeight: '700'
-    }
+    },
+    buttonContainer2: {
+        backgroundColor: '#95afc0',
+        paddingVertical: 15,
+        marginTop: 20
+    },
 });

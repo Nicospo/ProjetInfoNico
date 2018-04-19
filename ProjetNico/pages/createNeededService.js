@@ -16,7 +16,7 @@ export default class createNeeded extends React.Component {
         this.state = ({
             coRef: this.props.navigation.state.params,
             intitule: '',
-            somme: '',
+            somme: null,
             description: '',
             solde: 0,
             neededDataSource: ds
@@ -40,7 +40,7 @@ export default class createNeeded extends React.Component {
 
         if (intitule != '') {
             if (description != '') {
-                if (isNaN(somme)) {
+                if ((isNaN(somme)) || (somme == null)) {
                     alert("La somme rentrée n'est pas un numéro")
                 }
                 else {
@@ -49,17 +49,36 @@ export default class createNeeded extends React.Component {
                         this.setState({
                             solde: snapshot.val()
                         })
-                        if (this.state.solde >= somme) {
-                            const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Demandes').push({
-                                Intitule: intitule.toString(),
-                                Somme: somme,
-                                Description: description.toString(),
-                                Creator: user.uid.toString()
-                            })
-                        }
-                        else {
-                            alert("Vous n'avez pas l'argent que vous proposez.")
-                        }
+                        const creatorServiceRef = firebase.database().ref().child('communities').child(this.state.coRef).child('Creator')
+
+                        creatorServiceRef.once("value").then(snapshot => {
+                            if (userId == snapshot.val()) {
+                                const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Demandes').push({
+                                    Intitule: intitule.toString(),
+                                    Somme: parseInt(somme),
+                                    Description: description.toString(),
+                                    Creator: user.uid.toString()
+                                })
+                                alert("Votre service a été crée, et générera de l'argent")
+                                this.props.navigation.navigate('Needed', this.state.coRef)
+
+                            }
+                            else {
+                                if (this.state.solde >= somme) {
+                                    const ref = firebase.database().ref().child('communities').child(this.state.coRef).child('Services').child('Demandes').push({
+                                        Intitule: intitule.toString(),
+                                        Somme: parseInt(somme),
+                                        Description: description.toString(),
+                                        Creator: user.uid.toString()
+                                    })
+                                    alert('Votre demande a bien été créée !')
+                                    this.props.navigation.navigate('Needed', this.state.coRef)
+                                }
+                                else {
+                                    alert("Vous n'avez pas l'argent que vous proposez.")
+                                }
+                            }
+                        })
                     })
                 }
             }
@@ -109,6 +128,15 @@ export default class createNeeded extends React.Component {
                         style={styles.buttonContainer}>
                         <Text style={styles.buttonText}>Je la crée !</Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.navigate('Needed', this.state.coRef)
+                        }}
+                        style={styles.buttonContainer2}
+                    >
+                        <Text style={styles.buttonText}> Retour </Text>
+                    </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
         );
@@ -118,7 +146,7 @@ export default class createNeeded extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(246, 185, 59)',
+        backgroundColor: '#60a3bc',
     },
     logoContainer: {
         alignItems: 'center',
@@ -144,7 +172,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     buttonContainer: {
-        backgroundColor: 'rgb(250, 211, 144)',
+        backgroundColor: '#1e3799',
         paddingVertical: 15,
         marginBottom: 20
     },
@@ -152,5 +180,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#ffffff',
         fontWeight: '700'
-    }
+    },
+    buttonContainer2: {
+        backgroundColor: '#95afc0',
+        paddingVertical: 15,
+        marginTop: 20
+    },
 });

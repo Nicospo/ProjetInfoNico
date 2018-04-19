@@ -87,7 +87,7 @@ export default class Offered extends React.Component {
         creatorServiceRef.once("value").then(snapshot => {
             if (userId == snapshot.val()) { alert('Vous ne pouvez effectuer ce service, vous en êtes le créateur') }
             else {
-
+                creatorId=snapshot.val()
                 userSoldeRef.once("value").then(snapshot => {
 
                     this.setState({
@@ -104,6 +104,15 @@ export default class Offered extends React.Component {
                         alert("Votre solde est insuffisant pour régler ce service.")
                     }
 
+                })
+                const creatorSoldeRef= firebase.database().ref().child('users').child(snapshot.val()).child('Communities').child(this.state.coRef).child('Solde')
+                creatorSoldeRef.once("value").then(snapshot=>{
+                    this.setState({
+                        soldeCreator : snapshot.val()
+                    })
+                    firebase.database().ref().child('users').child(creatorId).child('Communities').child(this.state.coRef).update({
+                        Solde : this.state.soldeCreator + somme
+                    })
                 })
             }
         })
@@ -157,6 +166,14 @@ export default class Offered extends React.Component {
                     renderRow={this.renderRow}
 
                 />
+                <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.navigate('Communities')
+                    }}
+                    style={styles.buttonContainer}
+                >
+                    <Text style={styles.buttonText}> Retour </Text>
+                </TouchableOpacity>
                 <Modal
                     animationType={'slide'}
                     transparent={false}
@@ -172,16 +189,16 @@ export default class Offered extends React.Component {
                             <Text style={styles.basicText}>{this.state.description}</Text>
                             <Text style={styles.label}>Somme: </Text>
                             <Text style={styles.basicText}>{this.state.somme}</Text>
-
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.setModalVisible(false)
-                                }}
-                                style={styles.buttonContainer}
-                            >
-                                <Text style={styles.buttonText}> Retour </Text>
-                            </TouchableOpacity>
                         </View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.setModalVisible(false)
+                            }}
+                            style={styles.buttonContainer}
+                        >
+                            <Text style={styles.buttonText}> Retour </Text>
+                        </TouchableOpacity>
+
                     </View>
                 </Modal>
 
@@ -193,7 +210,7 @@ export default class Offered extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#4834d4',
+        backgroundColor: '#b8e994',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -207,7 +224,9 @@ const styles = StyleSheet.create({
     buttonContainer: {
         backgroundColor: '#95afc0',
         paddingVertical: 15,
-        marginTop: 40
+        marginTop: 30,
+        marginBottom: 20,
+        width: 200
     },
     title: {
         color: '#fff',
@@ -240,7 +259,7 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     button1: {
-        backgroundColor: '#30336b',
+        backgroundColor: '#78e08f',
         paddingVertical: 15,
         marginBottom: 20,
         width: 150,
