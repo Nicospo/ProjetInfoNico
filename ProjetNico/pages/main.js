@@ -2,14 +2,24 @@ import React from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TabNavigator, TabBarBottom, StackNavigator } from 'react-navigation';
-import Creation from './createCommunity';
+/* import Creation from './createCommunity';
 import Join from './joinCommunity';
 import Profile from './profile';
 import Connexion from './connexion';
 import Inscription from './inscription';
-import Communities from './userCommunity';
+import Communities from './userCommunity'; */
+import Tabs from '../config/router';
 
-const Tabs = TabNavigator({
+
+//const ProfileNavigator = StackNavigator({
+ //   ProfileLogIn:{
+  //      screen:Profile
+  //  },
+   // ProfileLogOut:{
+   //     screen: App
+   // }
+//})
+/* const Tabs = TabNavigator({
     Profile: {
         screen: Profile,
         navigationOptions: {
@@ -48,13 +58,16 @@ const Tabs = TabNavigator({
         tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom'
     }
-)
+) */
 
 export default class Main extends React.Component {
     static navigationOptions = {
         header: null
     }
 
+    constructor(props){
+        super(props)
+    }
     render() {
         return (
             <Tabs />

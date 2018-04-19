@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 export default class Create extends React.Component {
   static navigationOptions = {
     title: 'Create',
+    header:null
   };
   constructor(props) {
     super(props)
@@ -15,6 +16,7 @@ export default class Create extends React.Component {
     this.state = ({
       name: '',
       monnaie: '',
+      description:'',
       communitiesDataSource: ds
     })
     this.communitiesRef = this.getRef().child('communities');
@@ -72,19 +74,28 @@ export default class Create extends React.Component {
     const userId = user.uid
     const name = this.state.name
     const monnaie = this.state.monnaie
-    const ref = firebase.database().ref().child('users').child(userId).child('Communities')
-    ref.push({
+    const description = this.state.description
+    const ref = firebase.database().ref().child('users').child(userId).child('Communities').push()
+    const refKey=ref.key
+
+    ref.set({
         Name :name.toString(),
         Monnaie : monnaie.toString(),
-        Solde:0
-    })
-    this.communitiesRef.push({
+        Solde:0,
+        Description: description.toString(),
+        Count:1
+    }
+   )
+   
+    this.communitiesRef.child(refKey).set({
       Name: name.toString(),
       Monnaie: monnaie.toString(),
       Creator: userId.toString(),
       Membre: {
         id: userId.toString()
-      }
+      },
+      Count:1,
+      Description: description.toString()
     })
 
   }
@@ -110,6 +121,13 @@ export default class Create extends React.Component {
             autoCorrect={false}
             style={styles.input}
             onChangeText={(monnaie) => this.setState({ monnaie })}
+          />
+           <TextInput
+            placeholder="Description de la communauté"
+            placeholderTextColor="rgba(255,255,255,0.7)"
+            autoCorrect={false}
+            style={styles.input}
+            onChangeText={(description) => this.setState({ description })}
           />
 
           <TouchableOpacity

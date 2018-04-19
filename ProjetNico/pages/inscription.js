@@ -31,7 +31,6 @@ export default class Connexion extends React.Component {
   }
 
   signUpUser = (email, password, confirmPassword) => {
-    try {
       if (!this.stringsAreEquals(this.state.password, this.state.confirmPassword)) {
         alert("Les mots de passe ne sont pas identiques.")
         return;
@@ -40,17 +39,15 @@ export default class Connexion extends React.Component {
         alert("Vous n'avez pas entré de mot de passe.")
         return;
       }
-      this.setState({ loading: true })
       firebase.auth()
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
           this.setState({ error: '', loading: false });
           this.props.navigation.navigate('Connexion')
         })
-    }
-    catch (error) {
+    
+    .catch ((error) => {
       const errorCode = error.code;
-      //let errorMessage = error.message;
       if (errorCode == 'auth/invalid-email') {
         alert("Saisie d'email invalide !")
 
@@ -60,11 +57,10 @@ export default class Connexion extends React.Component {
 
       }
       else if (errorCode == 'auth/weak-password') {
-        alert("La sécurité de votre mot de passe est trop faible")
+        alert("La sécurité de votre mot de passe est trop faible. Veuillez avoir au moins 6 caractères")
 
       }
-      console.log(error.toString())
-    }
+    })
   }
   render() {
     return (

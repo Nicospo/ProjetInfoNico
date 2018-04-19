@@ -4,13 +4,14 @@ import Connexion from './pages/connexion';
 import Inscription from './pages/inscription';
 import { StackNavigator } from 'react-navigation';
 import * as firebase from 'firebase';
-import {config} from './firebase/constants';
+import { config } from './firebase/constants';
 import Main from './pages/main';
+import { Tabs } from './config/router';
 
 const firebaseApp = firebase.initializeApp(config);
 
 export default class App extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     console.disableYellowBox = true;
@@ -22,17 +23,17 @@ export default class App extends React.Component {
       <AppNavigator />
     );
   }
-}
+};
 
-const AppNavigator = StackNavigator({
+export const AppNavigator = StackNavigator({
   Connexion: {
     screen: Connexion
-    },
+  },
   Inscription: {
     screen: Inscription
   },
   Main: {
-    screen: Main
+    screen: Tabs
   }
 })
 
@@ -44,3 +45,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+

@@ -3,31 +3,22 @@ import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Image, 
 import { Icon } from 'react-native-elements';
 import { TabNavigator, TabBarBottom, StackNavigator, NavigationActions } from 'react-navigation';
 import * as firebase from 'firebase';
-import Connexion from './inscription';
+import Connexion from './connexion';
 
 
 export default class Profile extends React.Component {
     static navigationOptions = {
         title: 'Profile',
+        header:null
     };
 
     signOut = ()=>{
         firebase.auth()
         .signOut()
         .then(() => {
-            this.props.navigation.navigate('Connexion');
+           this.props.navigation.navigate('Connexion')
         })
-    }
-
-    resetNavigation() {
-        const resetAction = NavigationActions.reset({
-            index: 0,
-            key : null,
-            actions: [
-            NavigationActions.navigate('Connexion')
-            ]
-        })
-        this.props.navigation.dispatch(resetAction)
+    
     }
     render() {
         return (

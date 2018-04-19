@@ -25,16 +25,54 @@ export default class Connexion extends React.Component {
   };
 
   loginUser = (email, password) => {
-    try {
-      firebase.auth().signInWithEmailAndPassword(email,password).then(()=>{
-        this.props.navigation.navigate('Main')
-      })
-    }
-    catch(error)
-    {
-      console.log(error)
-    }
+      
+
+    //identification
+    firebase.auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(() => {this.props.navigation.navigate('Connexion') })
+    
+     //Affiche le type d'erreur 
+    .catch((error) => {
+        const errorCode = error.code;
+        if (errorCode == 'auth/invalid-email') {
+             alert("Saisie d'email invalide !")
+        } 
+        else if (errorCode == 'auth/user-not-found'){
+            alert("Cet utilisateur n'existe pas")
+
+        }
+        else if(errorCode == 'auth/wrong-password'){
+            alert("Mot de passe incorrect")
+        }
+        else{
+           alert("La connexion a échoué")
+
+        }
+    });
   }
+
+
+
+/*       firebase.auth().signInWithEmailAndPassword(email,password)
+      .then(()=>{
+        this.props.navigation.navigate('Main') 
+    }
+    .catch((error)=>
+    {
+      const errorCode = error.code;
+      if (errorCode == 'auth/invalid-email') {
+         alert("Cet email ne correspond pas à celui d'un utilisateur")
+      } 
+      else if (errorCode == 'auth/user-not-found'){
+         alert( "Cet utilisateur n'existe pas")
+      }
+      else if(errorCode == 'auth/wrong-password'){
+          alert("Mot de passe incorrect")
+      }
+    })
+  )
+  } */
 
   render() {
     return (
